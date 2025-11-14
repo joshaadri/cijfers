@@ -8,7 +8,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        /* ---------------------- GLOBAL ---------------------- */
         * {
             margin: 0;
             padding: 0;
@@ -18,7 +17,7 @@
         body {
             font-family: "Inter", Arial, sans-serif;
             background-color: #0e0e0e;
-            color: #e5e5e;
+            color: #e5e5e5;
             padding: 40px 20px;
             display: flex;
             flex-direction: column;
@@ -37,6 +36,61 @@
             text-align: center;
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.45);
             margin-bottom: 45px;
+        }
+
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: #0e0e0e;
+        }
+
+        .login-box {
+            background: #1a1a1a;
+            padding: 40px;
+            border-radius: 18px;
+            width: 350px;
+            box-shadow: 0 0 25px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        .login-box h2 {
+            margin-bottom: 25px;
+            font-size: 2em;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: none;
+            background: #2a2a2a;
+            color: white;
+            font-size: 1em;
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background: #5cb85c;
+            color: white;
+            font-size: 1.2em;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .login-box button:hover {
+            background: #4cae4c;
+        }
+
+        .error {
+            color: #ff4d4d;
+            margin-top: 10px;
+            display: none;
         }
 
         nav {
@@ -64,7 +118,6 @@
             transform: translateY(-2px);
         }
 
-        /* ---------------------- TABS ---------------------- */
         .tab {
             display: none;
             animation: fadeIn 0.4s ease;
@@ -77,16 +130,6 @@
             margin-bottom: 60px;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
         h2 {
             font-size: 1.9em;
             margin-bottom: 20px;
@@ -94,7 +137,6 @@
         }
 
         /* ---------------------- TABLES ---------------------- */
-
         table {
             width: 100%;
             border-collapse: collapse;
@@ -109,7 +151,6 @@
             font-size: 1.05em;
             border-bottom: 1px solid #333;
             text-align: center;
-            /* ✅ alles in het midden */
         }
 
         th {
@@ -160,121 +201,121 @@
             border-radius: 20px;
             padding: 25px;
         }
-
-        /* Login Form */
-        .login-container {
-            width: 100%;
-            max-width: 400px;
-            background: #222;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            text-align: center;
-        }
-
-        .login-container input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border: 1px solid #333;
-            background: #333;
-            color: #e5e5e;
-        }
-
-        .login-container button {
-            width: 100%;
-            padding: 12px;
-            background-color: #5cb85c;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.2em;
-            cursor: pointer;
-            color: white;
-        }
-
-        .login-container button:hover {
-            background-color: #4cae4c;
-        }
     </style>
 </head>
 
 <body>
 
-    <div id="login" class="login-container">
-        <h2>Login</h2>
-        <input type="text" id="username" placeholder="Enter your username" />
-        <input type="password" id="password" placeholder="Enter your password" />
-        <button onclick="login()">Login</button>
-        <p id="error-message" style="color: #ff4d4d; display: none;">Invalid username or password</p>
-    </div>
-
-    <header style="display:none;">Cijfers</header>
-
-    <nav style="display:none;">
-        <button class="tablink active" onclick="openTab('home')">Cijfers</button>
-        <button class="tablink" onclick="openTab('gemiddelde')">Gemiddelde</button>
-        <button class="tablink" onclick="openTab('statistieken')">Grafiek</button>
-        <button class="tablink" onclick="openTab('games')">Games</button>
-    </nav>
-
-    <!-- HOME -->
-    <div id="home" class="tab" style="display:block;">
-        <h2>Alle cijfers</h2>
-        <table id="gradeTable">
-            <thead>
-                <tr>
-                    <th data-col="vak">Vak</th>
-                    <th data-col="datum">Datum</th>
-                    <th data-col="cijfer">Cijfer</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
-    <!-- GEMIDDELDE -->
-    <div id="gemiddelde" class="tab">
-        <h2>Gemiddelde per vak</h2>
-        <table id="averageTable">
-            <thead>
-                <tr>
-                    <th data-col="vak">Vak</th>
-                    <th data-col="gem">Gemiddelde</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
-    <!-- STATISTIEKEN -->
-    <div id="statistieken" class="tab">
-        <h2>Grafiek: Gemiddelde per vak</h2>
-        <div class="chart-container">
-            <canvas id="avgChart"></canvas>
+    <div class="login-container" id="login-container">
+        <div class="login-box">
+            <h2>Inloggen</h2>
+            <input id="username" type="text" placeholder="Gebruikersnaam">
+            <input id="password" type="password" placeholder="Wachtwoord">
+            <button onclick="login()">Login</button>
+            <p id="error" class="error">Verkeerde gegevens</p>
         </div>
     </div>
 
-    <!-- GAMES (Chrome Dino Game) -->
-    <div id="games" class="tab">
-        <h2>Chrome Dino Game</h2>
-        <iframe src="https://chromedino.com/" style="width:100%; height:500px;" frameborder="0"></iframe>
+    <div id="content" style="display:none;">
+        <header>Cijfers</header>
+        <nav>
+            <button class="tablink active" onclick="openTab('home')">Cijfers</button>
+            <button class="tablink" onclick="openTab('gemiddelde')">Gemiddelde</button>
+            <button class="tablink" onclick="openTab('statistieken')">Grafiek</button>
+            <button class="tablink" onclick="openTab('games')">Games</button>
+        </nav>
+
+        <!-- HOME -->
+        <div id="home" class="tab" style="display:block;">
+            <h2>Alle cijfers</h2>
+            <table id="gradeTable">
+                <thead>
+                    <tr>
+                        <th data-col="vak">Vak</th>
+                        <th data-col="datum">Datum</th>
+                        <th data-col="cijfer">Cijfer</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- GEMIDDELDE -->
+        <div id="gemiddelde" class="tab">
+            <h2>Gemiddelde per vak</h2>
+            <table id="averageTable">
+                <thead>
+                    <tr>
+                        <th data-col="vak">Vak</th>
+                        <th data-col="gem">Gemiddelde</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- STATISTIEKEN -->
+        <div id="statistieken" class="tab">
+            <h2>Grafiek: Gemiddelde per vak</h2>
+            <div class="chart-container">
+                <canvas id="avgChart"></canvas>
+            </div>
+        </div>
+
+        <!-- GAMES -->
+        <div id="games" class="tab">
+            <h2>Chrome Dino Game</h2>
+            <iframe src="https://chromedino.com/" 
+                style="width:100%; height:500px; border:none; border-radius:15px;">
+            </iframe>
+        </div>
+
     </div>
 
     <script>
-        // Function to simulate login (this could be replaced by a backend solution)
         function login() {
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
+            const u = document.getElementById("username").value;
+            const p = document.getElementById("password").value;
 
-            if (username === "user" && password === "password") {
+            if (u === "admin" && p === "1234") {
                 localStorage.setItem("loggedIn", "true");
-                window.location.reload(); // Refresh the page to show the main content
+                document.getElementById("login-container").style.display = "none";
+                document.getElementById("content").style.display = "block";
+                generateGradeTable();
+                generateAverageTable();
+                createChart();
             } else {
-                document.getElementById("error-message").style.display = "block";
+                document.getElementById("error").style.display = "block";
             }
         }
 
-        // Check if the user is logged in
         if (localStorage.getItem("loggedIn") === "true") {
-            document.getElementBy
+            document.getElementById("login-container").style.display = "none";
+            document.getElementById("content").style.display = "block";
+            generateGradeTable();
+            generateAverageTable();
+            createChart();
+        }
+
+        function openTab(name) {
+            document.querySelectorAll(".tab").forEach(t => t.style.display = "none");
+            document.querySelectorAll(".tablink").forEach(b => b.classList.remove("active"));
+            document.getElementById(name).style.display = "block";
+            document.querySelector(`button[onclick="openTab('${name}')"]`).classList.add("active");
+        }
+
+        function generateGradeTable() {
+            // Insert the existing code for generating grade table here
+        }
+
+        function generateAverageTable() {
+            // Insert the existing code for generating average table here
+        }
+
+        function createChart() {
+            // Insert the existing code for generating the chart here
+        }
+    </script>
+</body>
+
+</html>
