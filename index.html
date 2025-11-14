@@ -4,10 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cijfers</title>
+    <title>Cijfers + Login</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
+        /* ---------------------- GLOBAL ---------------------- */
         * {
             margin: 0;
             padding: 0;
@@ -18,11 +19,73 @@
             font-family: "Inter", Arial, sans-serif;
             background-color: #0e0e0e;
             color: #e5e5e5;
+        }
+
+        /* ---------------------- LOGIN PAGE ---------------------- */
+        #loginPage {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        #loginBox {
+            background: #1a1a1a;
+            padding: 35px;
+            width: 320px;
+            border-radius: 15px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
+        }
+
+        #loginBox input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        #loginBox button {
+            width: 100%;
+            padding: 12px;
+            background: #333;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        #loginBox button:hover {
+            background: #555;
+        }
+
+        #loginError {
+            color: #d9534f;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+        }
+
+        #lockoutMessage {
+            color: #f0ad4e;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* ---------------------- MAIN UI ---------------------- */
+        #mainSite {
+            display: none;
             padding: 40px 20px;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
         }
 
         header {
@@ -111,7 +174,6 @@
             cursor: pointer;
             color: #ddd;
             text-transform: uppercase;
-            user-select: none;
         }
 
         tr:nth-child(even) {
@@ -119,11 +181,9 @@
         }
 
         .score {
-            font-weight: bold;
             padding: 7px 14px;
             border-radius: 8px;
-            min-width: 50px;
-            display: inline-block;
+            font-weight: bold;
         }
 
         .rood {
@@ -132,7 +192,7 @@
 
         .geel {
             background-color: #f0ad4e;
-            color: #000;
+            color: black;
         }
 
         .groen {
@@ -140,16 +200,13 @@
         }
 
         .chart-container {
-            width: 100%;
-            max-width: 900px;
             height: 450px;
-            margin: 20px auto;
-            background-color: #1a1a1a;
-            border-radius: 20px;
+            background: #1a1a1a;
             padding: 25px;
+            border-radius: 20px;
         }
 
-        /* GAME TAB FIX */
+        /* GAME */
         #game iframe {
             width: 100%;
             height: 600px;
@@ -161,115 +218,160 @@
 
 <body>
 
-    <header>Cijfers</header>
+    <!-- LOGIN SCREEN -->
+    <div id="loginPage">
+        <h1 style="color:white; margin-bottom:20px;">Inloggen</h1>
 
-    <nav>
-        <button class="tablink active" onclick="openTab('home')">Cijfers</button>
-        <button class="tablink" onclick="openTab('gemiddelde')">Gemiddelde</button>
-        <button class="tablink" onclick="openTab('statistieken')">Grafiek</button>
-        <button class="tablink" onclick="openTab('game')">Game</button> <!-- NEW BUTTON -->
-    </nav>
+        <div id="loginBox">
+            <label style="color:white;">Gebruikersnaam</label>
+            <input id="userInput" type="text">
 
-    <!-- HOME -->
-    <div id="home" class="tab" style="display:block;">
-        <h2>Alle cijfers</h2>
-        <table id="gradeTable">
-            <thead>
-                <tr>
-                    <th data-col="vak">Vak</th>
-                    <th data-col="datum">Datum</th>
-                    <th data-col="cijfer">Cijfer</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
+            <label style="color:white;">Wachtwoord</label>
+            <input id="passInput" type="password">
 
-    <!-- GEMIDDELDE -->
-    <div id="gemiddelde" class="tab">
-        <h2>Gemiddelde per vak</h2>
-        <table id="averageTable">
-            <thead>
-                <tr>
-                    <th>Vak</th>
-                    <th>Gemiddelde</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
+            <button onclick="login()">Inloggen</button>
 
-    <!-- STATISTIEKEN -->
-    <div id="statistieken" class="tab">
-        <h2>Grafiek: Gemiddelde per vak</h2>
-        <div class="chart-container">
-            <canvas id="avgChart"></canvas>
+            <p id="loginError">Onjuiste gebruikersnaam of wachtwoord</p>
+            <p id="lockoutMessage">Te veel pogingen. Wacht <span id="lockoutTimer"></span> seconden.</p>
         </div>
     </div>
 
-    <!-- 🎮 GAME TAB -->
-    <div id="game" class="tab">
-        <h2>Dino Game</h2>
-        <iframe src="https://chromedino.com/" loading="lazy"></iframe>
+    <!-- MAIN SITE -->
+    <div id="mainSite">
+
+        <header>Cijfers</header>
+
+        <nav>
+            <button class="tablink active" onclick="openTab('home')">Cijfers</button>
+            <button class="tablink" onclick="openTab('gemiddelde')">Gemiddelde</button>
+            <button class="tablink" onclick="openTab('statistieken')">Grafiek</button>
+            <button class="tablink" onclick="openTab('game')">Game</button>
+        </nav>
+
+        <!-- HOME -->
+        <div id="home" class="tab" style="display:block;">
+            <h2>Alle cijfers</h2>
+            <table id="gradeTable">
+                <thead>
+                    <tr>
+                        <th>Vak</th>
+                        <th>Datum</th>
+                        <th>Cijfer</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- GEMIDDELDE -->
+        <div id="gemiddelde" class="tab">
+            <h2>Gemiddelde per vak</h2>
+            <table id="averageTable">
+                <thead>
+                    <tr>
+                        <th>Vak</th>
+                        <th>Gemiddelde</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- STATISTIEKEN -->
+        <div id="statistieken" class="tab">
+            <h2>Grafiek: Gemiddelde per vak</h2>
+            <div class="chart-container">
+                <canvas id="avgChart"></canvas>
+            </div>
+        </div>
+
+        <!-- GAME -->
+        <div id="game" class="tab">
+            <h2>Dino Game</h2>
+            <iframe src="https://chromedino.com/" loading="lazy"></iframe>
+        </div>
+
     </div>
 
     <script>
+
+        /* ---------------- LOGIN SYSTEM ---------------- */
+        let attempts = 0;
+        let lockedOut = false;
+        const MAX_ATTEMPTS = 3;
+        const LOCKOUT_TIME = 30; // seconds
+
+        function login() {
+            if (lockedOut) return;
+
+            const user = document.getElementById("userInput").value;
+            const pass = document.getElementById("passInput").value;
+
+            if (user === "josha" && pass === "Joshasmc1234!") {
+                document.getElementById("loginPage").style.display = "none";
+                document.getElementById("mainSite").style.display = "block";
+            } else {
+                attempts++;
+                document.getElementById("loginError").style.display = "block";
+
+                if (attempts >= MAX_ATTEMPTS) lockout();
+            }
+        }
+
+        function lockout() {
+            lockedOut = true;
+            let timer = LOCKOUT_TIME;
+            document.getElementById("lockoutMessage").style.display = "block";
+
+            const interval = setInterval(() => {
+                timer--;
+                document.getElementById("lockoutTimer").innerText = timer;
+
+                if (timer <= 0) {
+                    clearInterval(interval);
+                    lockedOut = false;
+                    attempts = 0;
+                    document.getElementById("lockoutMessage").style.display = "none";
+                    document.getElementById("loginError").style.display = "none";
+                }
+            }, 1000);
+        }
+
+        /* ---------------- TAB SYSTEM ---------------- */
+        function openTab(name) {
+            document.querySelectorAll(".tab").forEach(t => t.style.display = "none");
+            document.querySelectorAll(".tablink").forEach(b => b.classList.remove("active"));
+            document.getElementById(name).style.display = "block";
+            document.querySelector(`button[onclick="openTab('${name}')"]`).classList.add("active");
+        }
+
+        /* ---------------- DATA ---------------- */
         const cijfers = {
             "Duitse taal": [
                 { datum: "7 nov", cijfer: 10.0 },
                 { datum: "10 okt", cijfer: 4.3 },
                 { datum: "29 sep", cijfer: 8.3 }
             ],
-            "Muziek": [
-                { datum: "4 nov", cijfer: 7.8 }
-            ],
-            "Franse taal": [
-                { datum: "30 okt", cijfer: 7.3 },
-                { datum: "21 okt", cijfer: 7.4 }
-            ],
-            "Engelse taal": [
-                { datum: "22 okt", cijfer: 7.0 }
-            ],
-            "Economie": [
-                { datum: "21 okt", cijfer: 5.7 },
-                { datum: "20 okt", cijfer: 5.0 }
-            ],
+            "Muziek": [{ datum: "4 nov", cijfer: 7.8 }],
+            "Franse taal": [{ datum: "30 okt", cijfer: 7.3 }, { datum: "21 okt", cijfer: 7.4 }],
+            "Engelse taal": [{ datum: "22 okt", cijfer: 7.0 }],
+            "Economie": [{ datum: "21 okt", cijfer: 5.7 }, { datum: "20 okt", cijfer: 5.0 }],
             "Nederlandse taal": [
                 { datum: "9 nov", cijfer: 9.3 },
                 { datum: "21 okt", cijfer: 6.6 },
                 { datum: "29 sep", cijfer: 7.5 }
             ],
-            "Biologie": [
-                { datum: "19 okt", cijfer: 6.8 }
-            ],
-            "Aardrijkskunde": [
-                { datum: "14 okt", cijfer: 6.5 },
-                { datum: "30 sep", cijfer: 6.0 }
-            ],
-            "Wiskunde": [
-                { datum: "8 okt", cijfer: 5.9 }
-            ],
-            "Geschiedenis": [
-                { datum: "7 okt", cijfer: 6.9 }
-            ],
-            "Nask": [
-                { datum: "9 okt", cijfer: 6.5 },
-                { datum: "9 okt", cijfer: 6.8 }
-            ]
+            "Biologie": [{ datum: "19 okt", cijfer: 6.8 }],
+            "Aardrijkskunde": [{ datum: "14 okt", cijfer: 6.5 }, { datum: "30 sep", cijfer: 6.0 }],
+            "Wiskunde": [{ datum: "8 okt", cijfer: 5.9 }],
+            "Geschiedenis": [{ datum: "7 okt", cijfer: 6.9 }],
+            "Nask": [{ datum: "9 okt", cijfer: 6.5 }, { datum: "9 okt", cijfer: 6.8 }]
         };
 
         const averages = {
-            "Duitse taal": 6.7,
-            "Muziek": 7.8,
-            "Franse taal": 7.3,
-            "Engelse taal": 7.0,
-            "Economie": 5.5,
-            "Nederlandse taal": 7.5,
-            "Biologie": 6.8,
-            "Aardrijkskunde": 6.3,
-            "Wiskunde": 5.9,
-            "Geschiedenis": 6.9,
-            "Nask": 6.6
+            "Duitse taal": 6.7, "Muziek": 7.8, "Franse taal": 7.3, "Engelse taal": 7.0,
+            "Economie": 5.5, "Nederlandse taal": 7.5, "Biologie": 6.8,
+            "Aardrijkskunde": 6.3, "Wiskunde": 5.9, "Geschiedenis": 6.9, "Nask": 6.6
         };
 
         const maand = { jan: 0, feb: 1, mrt: 2, apr: 3, mei: 4, jun: 5, jul: 6, aug: 7, sep: 8, okt: 9, nov: 10, dec: 11 };
@@ -285,13 +387,7 @@
             return "groen";
         }
 
-        function openTab(name) {
-            document.querySelectorAll(".tab").forEach(t => t.style.display = "none");
-            document.querySelectorAll(".tablink").forEach(b => b.classList.remove("active"));
-            document.getElementById(name).style.display = "block";
-            document.querySelector(`button[onclick="openTab('${name}')"]`).classList.add("active");
-        }
-
+        /* ---------------- TABLE GENERATION ---------------- */
         function generateGradeTable() {
             const tbody = document.querySelector("#gradeTable tbody");
             tbody.innerHTML = "";
@@ -310,8 +406,7 @@
                     <td>${item.vak}</td>
                     <td>${item.datum}</td>
                     <td><span class="score ${getColor(item.cijfer)}">${item.cijfer.toFixed(1)}</span></td>
-                </tr>
-            `;
+                </tr>`;
             });
         }
 
@@ -320,90 +415,41 @@
             tbody.innerHTML = "";
 
             for (const vak in averages) {
-                const avg = averages[vak];
                 tbody.innerHTML += `
                 <tr>
                     <td>${vak}</td>
-                    <td><span class="score ${getColor(avg)}">${avg.toFixed(1)}</span></td>
-                </tr>
-            `;
+                    <td><span class="score ${getColor(averages[vak])}">${averages[vak].toFixed(1)}</span></td>
+                </tr>`;
             }
         }
 
-        function makeSortable(tableId) {
-            const table = document.getElementById(tableId);
-            const headers = table.querySelectorAll("th");
-
-            headers.forEach((th, idx) => {
-                th.addEventListener("click", () => {
-                    const rows = Array.from(table.querySelector("tbody").rows);
-                    let sorted;
-
-                    if (tableId === "gradeTable") {
-                        if (idx === 0) {
-                            sorted = rows.sort((a, b) => a.cells[0].innerText.localeCompare(b.cells[0].innerText));
-                        }
-                        if (idx === 1) {
-                            sorted = rows.sort((a, b) => parseDate(b.cells[1].innerText) - parseDate(a.cells[1].innerText));
-                        }
-                        if (idx === 2) {
-                            sorted = rows.sort((a, b) =>
-                                parseFloat(b.cells[2].innerText) - parseFloat(a.cells[2].innerText)
-                            );
-                        }
-                    }
-
-                    if (tableId === "averageTable") {
-                        if (idx === 0) {
-                            sorted = rows.sort((a, b) => a.cells[0].innerText.localeCompare(b.cells[0].innerText));
-                        }
-                        if (idx === 1) {
-                            sorted = rows.sort((a, b) =>
-                                parseFloat(b.cells[1].innerText) - parseFloat(a.cells[1].innerText)
-                            );
-                        }
-                    }
-
-                    table.querySelector("tbody").innerHTML = "";
-                    sorted.forEach(r => table.querySelector("tbody").appendChild(r));
-                });
-            });
-        }
-
+        /* ---------------- CHART ---------------- */
         function createChart() {
-            const labels = Object.keys(averages);
-            const data = labels.map(l => averages[l]);
-
             new Chart(document.getElementById("avgChart"), {
                 type: "bar",
                 data: {
-                    labels,
+                    labels: Object.keys(averages),
                     datasets: [{
-                        label: "Gemiddelde",
-                        data,
-                        backgroundColor: data.map(v =>
+                        data: Object.values(averages),
+                        backgroundColor: Object.values(averages).map(v =>
                             v < 5.5 ? "#d9534f" :
                                 v < 6 ? "#f0ad4e" :
                                     "#5cb85c"
-                        ),
-                        borderRadius: 6
+                        )
                     }]
                 },
                 options: {
                     indexAxis: 'y',
-                    animation: false,
-                    scales: {
-                        x: { beginAtZero: true, max: 10 }
-                    }
+                    scales: { x: { beginAtZero: true, max: 10 } }
                 }
             });
         }
 
+        /* ---------------- INIT ---------------- */
         generateGradeTable();
         generateAverageTable();
-        makeSortable("gradeTable");
-        makeSortable("averageTable");
         createChart();
+
     </script>
 
 </body>
