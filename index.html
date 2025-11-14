@@ -1,76 +1,345 @@
-<!DOCTYPE html>
-<html lang="nl">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cijfers & Games</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
     <style>
-        /* ---------------------- GLOBAL ---------------------- */
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body, html { width:100%; height:100%; font-family:'Inter', Arial, sans-serif; background:#0e0e0e; color:#e5e5e5; overflow-x:hidden; }
+        /* ---------------- GLOBAL ---------------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body,
+        html {
+            height: 100%;
+            font-family: "Inter", Arial, sans-serif;
+            background-color: #0e0e0e;
+            color: #e5e5e5;
+            overflow-x: hidden;
+        }
+
+        /* ---------------- PARTICLES ---------------- */
+        #particles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        /* ---------------- LOGIN ---------------- */
+        #loginPage {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            flex-direction: column;
+            text-align: center;
+            animation: fadeIn 0.5s;
+        }
+
+        #loginPage h1 {
+            font-size: 3em;
+            margin-bottom: 30px;
+            color: #00bfff;
+            text-shadow: 0 0 10px #00bfff;
+        }
+
+        #loginForm {
+            background: rgba(30, 30, 30, 0.85);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(0, 191, 255, 0.5);
+        }
+
+        #loginForm input {
+            display: block;
+            width: 250px;
+            margin: 15px auto;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            font-size: 1.1em;
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        #loginForm button {
+            margin-top: 20px;
+            padding: 12px 25px;
+            border-radius: 12px;
+            border: none;
+            background: #00bfff;
+            color: #fff;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        #loginForm button:hover {
+            background: #009acd;
+        }
+
+        #loginError {
+            color: #ff5555;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* ---------------- MAIN APP ---------------- */
+        #app {
+            display: none;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(145deg, #1a1a1a, #101010);
+            padding: 25px 50px;
+            font-size: 2.7em;
+            color: white;
+            border-radius: 20px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.45);
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        #logoutBtn {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            background: #d9534f;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: 0.3s;
+        }
+
+        #logoutBtn:hover {
+            background: #b52b2b;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        nav button {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            color: #ccc;
+            padding: 12px 28px;
+            font-size: 1.1em;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.25s ease;
+        }
+
+        nav button:hover,
+        nav button.active {
+            background-color: #333;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .tab {
+            display: none;
+            animation: fadeIn 0.4s ease;
+            width: 100%;
+            max-width: 900px;
+            background-color: #161616;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+            margin-bottom: 60px;
+        }
+
+        h2 {
+            font-size: 1.9em;
+            margin-bottom: 20px;
+            color: #fff;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #1c1c1c;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 14px 12px;
+            font-size: 1.05em;
+            border-bottom: 1px solid #333;
+            text-align: center;
+        }
+
+        th {
+            background-color: #222;
+            cursor: pointer;
+            color: #ddd;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            user-select: none;
+            transition: 0.2s;
+        }
+
+        th:hover {
+            background-color: #2a2a2a;
+        }
+
+        tr:nth-child(even) {
+            background-color: #1a1a1a;
+        }
+
+        .score {
+            font-weight: bold;
+            padding: 7px 14px;
+            border-radius: 8px;
+            min-width: 50px;
+            display: inline-block;
+        }
+
+        .rood {
+            background-color: #d9534f;
+        }
+
+        .geel {
+            background-color: #f0ad4e;
+            color: #000;
+        }
+
+        .groen {
+            background-color: #5cb85c;
+        }
+
+        .chart-container {
+            width: 100%;
+            max-width: 900px;
+            height: 450px;
+            margin: 20px auto;
+            background-color: #1a1a1a;
+            border-radius: 20px;
+            padding: 25px;
+        }
+
+        /* ---------------- GAMES ---------------- */
+        #gamesList {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            justify-items: center;
+        }
+
+        .gameCard {
+            background: #1c1c1c;
+            border-radius: 15px;
+            overflow: hidden;
+            width: 100%;
+            max-width: 220px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.2);
+            transition: 0.3s;
+        }
+
+        .gameCard:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 191, 255, 0.4);
+        }
+
+        .gameCard iframe {
+            width: 100%;
+            height: 200px;
+            border: none;
+        }
+
+        .gameCard span {
+            display: block;
+            padding: 10px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        /* ---------------- ANIMATION ---------------- */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+        body, html { margin:0; padding:0; font-family:'Inter', Arial, sans-serif; background:#0e0e0e; color:#e5e5e5; }
         header { text-align:center; font-size:2.5em; padding:25px 50px; background:linear-gradient(145deg,#1a1a1a,#101010); border-radius:20px; box-shadow:0 0 30px rgba(0,0,0,0.45); margin-bottom:40px; }
         nav { display:flex; justify-content:center; gap:20px; margin-bottom:40px; }
         nav button { background:#1a1a1a; border:1px solid #333; color:#ccc; padding:12px 28px; font-size:1.1em; cursor:pointer; border-radius:12px; transition:0.25s; }
         nav button:hover, nav button.active { background:#333; color:white; transform:translateY(-2px); }
-
         .tab { display:none; animation:fadeIn 0.4s ease; width:100%; max-width:900px; background:#161616; padding:30px; border-radius:20px; box-shadow:0 0 25px rgba(0,0,0,0.3); margin-bottom:60px; }
         @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
         h2 { font-size:1.9em; margin-bottom:20px; color:#fff; }
-
         table { width:100%; border-collapse:collapse; background:#1c1c1c; border-radius:12px; overflow:hidden; }
         th, td { padding:14px 12px; text-align:center; border-bottom:1px solid #333; }
         th { cursor:pointer; background:#222; color:#ddd; text-transform:uppercase; transition:0.2s; user-select:none; }
         th:hover { background:#2a2a2a; }
         tr:nth-child(even){ background:#1a1a1a; }
-
         .score { font-weight:bold; padding:7px 14px; border-radius:8px; display:inline-block; }
         .rood { background:#d9534f; } .geel { background:#f0ad4e; color:#000; } .groen { background:#5cb85c; }
-
         .chart-container { width:100%; max-width:900px; height:450px; margin:20px auto; background:#1a1a1a; border-radius:20px; padding:25px; }
-
-        /* ---------------------- LOGIN ---------------------- */
         #loginPage { display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; background:#0e0e0e; }
         #loginPage form { background:#161616; padding:40px; border-radius:20px; box-shadow:0 0 25px rgba(0,0,0,0.3); display:flex; flex-direction:column; gap:20px; width:320px; }
         #loginPage input { padding:12px; border-radius:8px; border:none; outline:none; font-size:1em; }
         #loginPage button { padding:12px; border:none; border-radius:8px; background:#5cb85c; color:white; font-size:1.1em; cursor:pointer; transition:0.25s; }
         #loginPage button:hover { background:#4aa74a; }
-
-        /* ---------------------- PARTICLES ---------------------- */
         #particles-js { position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1; }
-
-        /* ---------------------- GAMES ---------------------- */
-        .gamesGrid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:15px; margin-top:20px; }
-        .gameCard { background:#1a1a1a; border-radius:12px; padding:15px; text-align:center; cursor:pointer; transition:0.25s; }
-        .gameCard:hover { transform:translateY(-5px); background:#333; }
-        .gameCard img { width:100%; border-radius:8px; }
-        #gameIframeContainer { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:9999; }
-        #gameIframe { width:100%; height:100%; border:none; }
-
-        /* ---------------------- LOGOUT ---------------------- */
-        #logoutBtn { position:fixed; top:15px; right:15px; padding:10px 18px; background:#d9534f; color:white; border:none; border-radius:10px; cursor:pointer; z-index:1000; transition:0.25s; }
+        #logoutBtn { position:fixed; top:15px; right:15px; padding:6px 12px; background:#d9534f; color:white; border:none; border-radius:8px; cursor:pointer; z-index:1000; font-size:0.9em; transition:0.25s; }
         #logoutBtn:hover { background:#c24342; }
-
     </style>
 </head>
 
 <body>
+
+    <!-- PARTICLE BACKGROUND -->
+    <div id="particles"></div>
     <div id="particles-js"></div>
 
     <!-- LOGIN PAGE -->
     <div id="loginPage">
+        <h1>Welkom</h1>
         <form id="loginForm">
             <h2 style="text-align:center;">Login</h2>
             <input type="text" id="username" placeholder="Gebruikersnaam" required>
             <input type="password" id="password" placeholder="Wachtwoord" required>
+            <button type="submit">Login</button>
+            <div id="loginError">Onjuiste gebruikersnaam of wachtwoord</div>
             <button type="submit">Inloggen</button>
             <p id="loginError" style="color:#d9534f; display:none; text-align:center;"></p>
         </form>
     </div>
 
+    <!-- MAIN APP -->
+    <div id="app">
+        <header>
+            Cijfers & Games
+            <button id="logoutBtn">Logout</button>
+        </header>
     <!-- MAIN SITE -->
     <div id="mainSite" style="display:none;">
         <button id="logoutBtn">Logout</button>
@@ -78,99 +347,76 @@
 
         <nav>
             <button class="tablink active" onclick="openTab('home')">Cijfers</button>
-            <button class="tablink" onclick="openTab('gemiddelde')">Gemiddelde</button>
-            <button class="tablink" onclick="openTab('statistieken')">Grafiek</button>
-            <button class="tablink" onclick="openTab('games')">Games</button>
-        </nav>
-
-        <!-- HOME -->
-        <div id="home" class="tab" style="display:block;">
-            <h2>Alle cijfers</h2>
-            <table id="gradeTable">
-                <thead>
-                    <tr>
-                        <th data-col="vak">Vak</th>
-                        <th data-col="datum">Datum</th>
-                        <th data-col="cijfer">Cijfer</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-
-        <!-- GEMIDDELDE -->
-        <div id="gemiddelde" class="tab">
-            <h2>Gemiddelde per vak</h2>
-            <table id="averageTable">
-                <thead>
-                    <tr>
-                        <th data-col="vak">Vak</th>
-                        <th data-col="gem">Gemiddelde</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-
-        <!-- STATISTIEKEN -->
-        <div id="statistieken" class="tab">
-            <h2>Grafiek: Gemiddelde per vak</h2>
-            <div class="chart-container">
-                <canvas id="avgChart"></canvas>
+@@ -360,219 +99,157 @@ <h2>Grafiek: Gemiddelde per vak</h2>
             </div>
         </div>
 
         <!-- GAMES -->
+        <!-- GAMES (empty for now) -->
         <div id="games" class="tab">
-            <h2>Speel de games</h2>
-            <div class="gamesGrid">
-                <div class="gameCard" data-src="https://chromedino.com/"><img src="https://i.imgur.com/1f5nC7k.png" alt="Dino"> Chrome Dino</div>
-                <div class="gameCard" data-src="https://crosser.io/"><img src="https://i.imgur.com/JwOENl0.png" alt="Crossy"> Crossy Road</div>
-                <div class="gameCard" data-src="https://drive-mad.net/"><img src="https://i.imgur.com/zXy1s8r.png" alt="Drive"> Drive Mad</div>
-                <div class="gameCard" data-src="https://gettingoveritgame.com/"><img src="https://i.imgur.com/3CqBqQb.png" alt="Getting Over It"> Getting Over It</div>
-                <!-- Add more games as needed -->
+            <h2>Games</h2>
+            <div id="gamesList">
+                <div class="gameCard" data-src="https://chromedino.com/"><span>Dino</span></div>
+                <div class="gameCard" data-src="https://slopegame.io/"><span>Slope</span></div>
+                <div class="gameCard" data-src="https://1v1.lol/"><span>1v1.lol</span></div>
+                <div class="gameCard" data-src="https://motox3m.com/"><span>Moto X3M</span></div>
+                <div class="gameCard" data-src="https://driftboss.com/"><span>Drift Boss</span></div>
+                <div class="gameCard" data-src="https://tetris.com/play-tetris"><span>Tetris</span></div>
+                <div class="gameCard" data-src="https://flappybird.io/"><span>Flappy Bird</span></div>
+                <div class="gameCard" data-src="https://drivemad.com/"><span>Drive Mad</span></div>
+                <div class="gameCard" data-src="https://gettingoverit.com/"><span>Getting Over It</span></div>
+                <div class="gameCard" data-src="https://crossyroad.com/"><span>Crossy Road</span></div>
             </div>
-        </div>
-        <div id="gameIframeContainer">
-            <iframe id="gameIframe"></iframe>
+            <div id="gameIframeContainer" style="margin-top:20px; height:500px; display:none;">
+                <iframe id="gameIframe" src="" frameborder="0" scrolling="no" width="100%" height="100%"></iframe>
+            </div>
+            <h2>Speel de games</h2>
+            <p style="text-align:center; color:#aaa;">Geen games toegevoegd. Je kunt er later kiezen.</p>
         </div>
     </div>
 
     <script>
+        // ---------------- LOGIN ----------------
+        const storedUser = 'josha';
+        const storedPass = 'Joshasmc1234!';
         /* ---------------- PARTICLES ---------------- */
         particlesJS("particles-js", {
-            "particles": {
-                "number": { "value": 80 },
-                "size": { "value": 3 },
-                "move": { "speed": 2 },
-                "line_linked": { "enable": true, "distance": 150, "color": "#888" }
-            }
+            "particles": { "number": { "value": 80 }, "size": { "value": 3 }, "move": { "speed": 2 }, "line_linked": { "enable": true, "distance": 150, "color": "#888" } }
         });
 
         /* ---------------- LOGIN ---------------- */
         const USER = 'josha';
         const PASS = 'Joshasmc1234!';
         const loginPage = document.getElementById('loginPage');
+        const app = document.getElementById('app');
         const mainSite = document.getElementById('mainSite');
         const loginForm = document.getElementById('loginForm');
         const loginError = document.getElementById('loginError');
+        const logoutBtn = document.getElementById('logoutBtn');
 
         function checkLogin() {
+            const session = localStorage.getItem('loggedIn');
+            if (session === 'true') {
             const stored = localStorage.getItem('loggedIn');
             if (stored === 'true') {
                 loginPage.style.display = 'none';
+                app.style.display = 'block';
                 mainSite.style.display = 'block';
             }
         }
 
         loginForm.addEventListener('submit', e => {
             e.preventDefault();
+            const username = document.getElementById('username').value.trim();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
+            if (username === storedUser && password === storedPass) {
             if (username === USER && password === PASS) {
                 localStorage.setItem('loggedIn', 'true');
+                loginError.style.display = 'none';
                 loginPage.style.display = 'none';
+                app.style.display = 'block';
                 mainSite.style.display = 'block';
             } else {
                 loginError.style.display = 'block';
@@ -178,6 +424,7 @@
             }
         });
 
+        logoutBtn.addEventListener('click', () => {
         document.getElementById('logoutBtn').addEventListener('click', () => {
             localStorage.removeItem('loggedIn');
             location.reload();
@@ -185,6 +432,30 @@
 
         checkLogin();
 
+        // ---------------- TAB SWITCH ----------------
+        function openTab(name) {
+            document.querySelectorAll(".tab").forEach(t => t.style.display = "none");
+            document.querySelectorAll(".tablink").forEach(b => b.classList.remove("active"));
+            document.getElementById(name).style.display = "block";
+            document.querySelector(`button[onclick="openTab('${name}')"]`).classList.add("active");
+        }
+
+        // ---------------- PARTICLES ----------------
+        const canvas = document.createElement('canvas');
+        document.getElementById('particles').appendChild(canvas);
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particles = [];
+        for (let i = 0; i < 100; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                r: Math.random() * 3 + 1,
+                dx: (Math.random() - 0.5) * 1.5,
+                dy: (Math.random() - 0.5) * 1.5
+            });
         /* ---------------- TABS ---------------- */
         function openTab(name){
             document.querySelectorAll('.tab').forEach(t=>t.style.display='none');
@@ -193,8 +464,45 @@
             document.querySelector(`button[onclick="openTab('${name}')"]`).classList.add('active');
         }
 
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fillStyle = "#00bfff";
+                ctx.fill();
+                p.x += p.dx;
+                p.y += p.dy;
+                if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // ---------------- GRADE DATA ----------------
         /* ---------------- CIFERS ---------------- */
         const cijfers = {
+            "Duitse taal": [{ datum: "7 nov", cijfer: 10.0 }, { datum: "10 okt", cijfer: 4.3 }, { datum: "29 sep", cijfer: 8.3 }],
+            "Muziek": [{ datum: "4 nov", cijfer: 7.8 }],
+            "Franse taal": [{ datum: "30 okt", cijfer: 7.3 }, { datum: "21 okt", cijfer: 7.4 }],
+            "Engelse taal": [{ datum: "22 okt", cijfer: 7.0 }],
+            "Economie": [{ datum: "21 okt", cijfer: 5.7 }, { datum: "20 okt", cijfer: 5.0 }],
+            "Nederlandse taal": [{ datum: "9 nov", cijfer: 9.3 }, { datum: "21 okt", cijfer: 6.6 }, { datum: "29 sep", cijfer: 7.5 }],
+            "Biologie": [{ datum: "19 okt", cijfer: 6.8 }],
+            "Aardrijkskunde": [{ datum: "14 okt", cijfer: 6.5 }, { datum: "30 sep", cijfer: 6.0 }],
+            "Wiskunde": [{ datum: "8 okt", cijfer: 5.9 }],
+            "Geschiedenis": [{ datum: "7 okt", cijfer: 6.9 }],
+            "Nask": [{ datum: "9 okt", cijfer: 6.5 }, { datum: "9 okt", cijfer: 6.8 }]
+        };
+
+        const averages = {
+            "Duitse taal": 6.7, "Muziek": 7.8, "Franse taal": 7.3, "Engelse taal": 7.0, "Economie": 5.5,
+            "Nederlandse taal": 7.5, "Biologie": 6.8, "Aardrijkskunde": 6.3, "Wiskunde": 5.9, "Geschiedenis": 6.9, "Nask": 6.6
             "Duitse taal":[{datum:"7 nov",cijfer:10},{datum:"10 okt",cijfer:4.3},{datum:"29 sep",cijfer:8.3}],
             "Muziek":[{datum:"4 nov",cijfer:7.8}],
             "Franse taal":[{datum:"30 okt",cijfer:7.3},{datum:"21 okt",cijfer:7.4}],
@@ -208,18 +516,38 @@
             "Nask":[{datum:"9 okt",cijfer:6.5},{datum:"9 okt",cijfer:6.8}]
         };
 
+        const maand = { jan: 0, feb: 1, mrt: 2, apr: 3, mei: 4, jun: 5, jul: 6, aug: 7, sep: 8, okt: 9, nov: 10, dec: 11 };
+
+        function parseDate(str) {
+            const [d, m] = str.split(" ");
+            return new Date(2025, maand[m.slice(0, 3)], parseInt(d));
         const averages = {};
         for(const vak in cijfers){
             averages[vak] = (cijfers[vak].reduce((a,b)=>a+b.cijfer,0)/cijfers[vak].length).toFixed(1);
         }
 
+        function getColor(s) {
+            if (s < 5.5) return "rood";
+            if (s < 6.5) return "geel";
+            return "groen";
+        }
         const maand = {jan:0,feb:1,mrt:2,apr:3,mei:4,jun:5,jul:6,aug:7,sep:8,okt:9,nov:10,dec:11};
         function parseDate(str){ const [d,m]=str.split(" "); return new Date(2025, maand[m.slice(0,3)], parseInt(d)); }
         function getColor(s){ return s<5.5?'rood': s<6.5?'geel':'groen'; }
 
+        function generateGradeTable() {
+            const tbody = document.querySelector("#gradeTable tbody");
+            tbody.innerHTML = "";
         function generateGradeTable(){
             const tbody = document.querySelector("#gradeTable tbody"); tbody.innerHTML="";
             const all = [];
+            for (const vak in cijfers) {
+                cijfers[vak].forEach(c => all.push({ vak, datum: c.datum, cijfer: c.cijfer }));
+            }
+            all.sort((a, b) => parseDate(b.datum) - parseDate(a.datum));
+            all.forEach(r => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `<td>${r.vak}</td><td>${r.datum}</td><td><span class="score ${getColor(r.cijfer)}">${r.cijfer}</span></td>`;
             for(const vak in cijfers){cijfers[vak].forEach(c=>all.push({vak, datum:c.datum, cijfer:c.cijfer}));}
             all.sort((a,b)=>parseDate(b.datum)-parseDate(a.datum));
             all.forEach(r=>{
@@ -229,6 +557,12 @@
             });
         }
 
+        function generateAverageTable() {
+            const tbody = document.querySelector("#averageTable tbody");
+            tbody.innerHTML = "";
+            for (const vak in averages) {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `<td>${vak}</td><td>${averages[vak]}</td>`;
         function generateAverageTable(){
             const tbody = document.querySelector("#averageTable tbody"); tbody.innerHTML="";
             for(const vak in averages){
@@ -238,6 +572,7 @@
             }
         }
 
+        function generateChart() {
         function makeSortable(tableId){
             const table = document.getElementById(tableId);
             const headers = table.querySelectorAll("th");
@@ -263,6 +598,18 @@
         function createChart(){
             const ctx = document.getElementById("avgChart").getContext("2d");
             new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(averages),
+                    datasets: [{
+                        label: 'Gemiddelde',
+                        data: Object.values(averages),
+                        backgroundColor: Object.values(averages).map(getColor)
+                    }]
+                },
+                options: {
+                    scales: { y: { beginAtZero: true, max: 10 } }
+                }
                 type:'bar',
                 data:{ labels:Object.keys(averages), datasets:[{label:'Gemiddelde', data:Object.values(averages), backgroundColor:Object.values(averages).map(getColor), borderRadius:6 }]},
                 options:{ indexAxis:'y', scales:{ x:{ beginAtZero:true, max:10 } }, animation:false }
@@ -271,39 +618,43 @@
 
         generateGradeTable();
         generateAverageTable();
+        generateChart();
+
+        // ---------------- GAME LAUNCHER ----------------
+        const gameCards = document.querySelectorAll('.gameCard');
+        const gameIframe = document.getElementById('gameIframe');
+        const gameIframeContainer = document.getElementById('gameIframeContainer');
+
+        gameCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const src = card.dataset.src;
+                gameIframe.src = src;
+                gameIframeContainer.style.display = "block";
+                window.scrollTo({ top: gameIframeContainer.offsetTop - 20, behavior: 'smooth' });
+            });
+        });
+
+        // ---------------- SECRET ADMIN MODE ----------------
+        let keys = [];
+        document.addEventListener('keydown', e => {
         makeSortable("gradeTable");
         makeSortable("averageTable");
         createChart();
 
-        /* ---------------- GAME LAUNCHER ---------------- */
-        const gameCards=document.querySelectorAll('.gameCard');
-        const gameIframe=document.getElementById('gameIframe');
-        const gameIframeContainer=document.getElementById('gameIframeContainer');
-
-        gameCards.forEach(card=>{
-            card.addEventListener('click', ()=>{
-                const src=card.dataset.src;
-                gameIframe.src=src;
-                gameIframeContainer.style.display="block";
-            });
-        });
-
-        gameIframeContainer.addEventListener('click', e=>{
-            if(e.target===gameIframeContainer){
-                gameIframeContainer.style.display='none';
-                gameIframe.src='';
-            }
-        });
-
         /* ---------------- SECRET ADMIN MODE ---------------- */
+        // To access admin mode: type "adminmode" anywhere on the page
         let keys=[];
         document.addEventListener('keydown', e=>{
             keys.push(e.key.toLowerCase());
+            if (keys.slice(-10).join('') === 'adminmode') {
             if(keys.slice(-9).join('')==='adminmode'){
                 alert('💻 Admin mode unlocked!');
+                keys = [];
                 keys=[];
             }
         });
     </script>
+
 </body>
+
 </html>
