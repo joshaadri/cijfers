@@ -96,7 +96,6 @@
             display: none;
         }
 
-        /* ---------------------- MAIN SITE ---------------------- */
         #mainSite {
             display: none;
             padding: 40px 20px;
@@ -114,7 +113,6 @@
             border-radius: 20px;
             font-weight: 700;
             margin-bottom: 45px;
-            text-align: center;
         }
 
         nav {
@@ -159,7 +157,6 @@
             to { opacity: 1; }
         }
 
-        /* ---------------------- TABLES ---------------------- */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -175,7 +172,7 @@
         }
 
         th {
-            background-color: #222;
+            background: #222;
             color: #ddd;
             cursor: pointer;
         }
@@ -188,7 +185,6 @@
             padding: 7px 14px;
             border-radius: 8px;
             font-weight: bold;
-            color: white;
         }
 
         .rood { background: #d9534f; }
@@ -202,7 +198,6 @@
             border-radius: 20px;
         }
 
-        /* GAME */
         #game iframe {
             width: 100%;
             height: 600px;
@@ -287,12 +282,15 @@
 
     <script>
 
-        /* ---------------------- PASSWORD SECURITY ---------------------- */
+        /* ---------------------- AUTO-HASH PASSWORD ---------------------- */
+        let correctHash = null;
 
-        // SHA-256 hash for password "Joshasmc1234!"
-        // (Generated securely)
-        const correctHash =
-            "b6b01ee861057bdeb21cd7e279f98e3f7f872e95cba6ae61b5f78828e0635f32";
+        async function initPassword() {
+            correctHash = await sha256("Joshasmc1234!");
+            console.log("Password hash:", correctHash);
+        }
+        initPassword();
+
 
         async function sha256(message) {
             const msgBuffer = new TextEncoder().encode(message);
@@ -301,7 +299,6 @@
             return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
         }
 
-        /* ---------------------- LOGIN LOGIC ---------------------- */
         let attempts = 0;
         let locked = false;
 
@@ -316,12 +313,13 @@
             if (user === "josha" && passHash === correctHash) {
                 document.getElementById("loginPage").style.display = "none";
                 document.getElementById("mainSite").style.display = "flex";
-            } else {
-                attempts++;
-                document.getElementById("loginError").style.display = "block";
-
-                if (attempts >= 3) activateLockout();
+                return;
             }
+
+            attempts++;
+            document.getElementById("loginError").style.display = "block";
+
+            if (attempts >= 3) activateLockout();
         }
 
         function activateLockout() {
@@ -479,7 +477,7 @@
             });
         }
 
-        /* ---------------------- CHART ---------------------- */
+        /* ---------------------- GRAPH ---------------------- */
         function createChart() {
             const labels = Object.keys(averages);
             const data = labels.map(l => averages[l]);
