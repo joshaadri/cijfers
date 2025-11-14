@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cijfers + Login</title>
+    <title>Cijfers</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
@@ -24,61 +24,79 @@
         /* ---------------------- LOGIN PAGE ---------------------- */
         #loginPage {
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            padding: 20px;
+            background: radial-gradient(circle at top, #1e1e1e, #0e0e0e);
         }
 
         #loginBox {
-            background: #1a1a1a;
-            padding: 35px;
-            width: 320px;
-            border-radius: 15px;
-            box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
+            width: 350px;
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 40px rgba(0, 150, 255, 0.15);
+            text-align: center;
+            animation: fadeIn 0.7s ease;
+        }
+
+        #loginBox h1 {
+            font-size: 2em;
+            margin-bottom: 25px;
+            color: white;
+            text-shadow: 0 0 10px rgba(0, 150, 255, 0.6);
         }
 
         #loginBox input {
             width: 100%;
             padding: 12px;
-            margin: 10px 0 20px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1em;
+            margin: 10px 0 18px;
+            border-radius: 10px;
+            border: 1px solid #444;
+            background: rgba(255, 255, 255, 0.07);
+            color: white;
+            outline: none;
+            transition: 0.25s;
+        }
+
+        #loginBox input:focus {
+            border-color: #2ea8ff;
+            box-shadow: 0 0 10px rgba(0, 150, 255, 0.4);
         }
 
         #loginBox button {
             width: 100%;
             padding: 12px;
-            background: #333;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
+            background: #2ea8ff;
             color: white;
-            font-size: 1.1em;
+            font-size: 1.15em;
             cursor: pointer;
-            transition: 0.2s;
+            transition: 0.3s;
+            box-shadow: 0 0 12px rgba(0, 150, 255, 0.35);
         }
 
         #loginBox button:hover {
-            background: #555;
+            background: #4cb8ff;
+            box-shadow: 0 0 18px rgba(0, 150, 255, 0.7);
         }
 
         #loginError {
-            color: #d9534f;
-            text-align: center;
             margin-top: 10px;
+            color: #ff4d4d;
             display: none;
         }
 
         #lockoutMessage {
-            color: #f0ad4e;
-            text-align: center;
             margin-top: 10px;
+            color: #f0ad4e;
             display: none;
         }
 
-        /* ---------------------- MAIN UI ---------------------- */
+        /* ---------------------- MAIN SITE ---------------------- */
         #mainSite {
             display: none;
             padding: 40px 20px;
@@ -95,13 +113,12 @@
             color: white;
             border-radius: 20px;
             font-weight: 700;
-            text-align: center;
             margin-bottom: 45px;
+            text-align: center;
         }
 
         nav {
             display: flex;
-            justify-content: center;
             gap: 20px;
             margin-bottom: 40px;
             flex-wrap: wrap;
@@ -138,21 +155,11 @@
         }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
-        h2 {
-            font-size: 1.9em;
-            margin-bottom: 20px;
-            color: #fff;
-        }
-
+        /* ---------------------- TABLES ---------------------- */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -161,43 +168,32 @@
             overflow: hidden;
         }
 
-        th,
-        td {
+        th, td {
             padding: 14px 12px;
-            font-size: 1.05em;
             border-bottom: 1px solid #333;
             text-align: center;
         }
 
         th {
             background-color: #222;
-            cursor: pointer;
             color: #ddd;
-            text-transform: uppercase;
+            cursor: pointer;
         }
 
         tr:nth-child(even) {
-            background-color: #1a1a1a;
+            background: #1a1a1a;
         }
 
         .score {
             padding: 7px 14px;
             border-radius: 8px;
             font-weight: bold;
+            color: white;
         }
 
-        .rood {
-            background-color: #d9534f;
-        }
-
-        .geel {
-            background-color: #f0ad4e;
-            color: black;
-        }
-
-        .groen {
-            background-color: #5cb85c;
-        }
+        .rood { background: #d9534f; }
+        .geel { background: #f0ad4e; color: black; }
+        .groen { background: #5cb85c; }
 
         .chart-container {
             height: 450px;
@@ -218,25 +214,21 @@
 
 <body>
 
-    <!-- LOGIN SCREEN -->
+    <!-- -------------------- LOGIN PAGE -------------------- -->
     <div id="loginPage">
-        <h1 style="color:white; margin-bottom:20px;">Inloggen</h1>
-
         <div id="loginBox">
-            <label style="color:white;">Gebruikersnaam</label>
-            <input id="userInput" type="text">
+            <h1>Inloggen</h1>
 
-            <label style="color:white;">Wachtwoord</label>
-            <input id="passInput" type="password">
-
+            <input id="userInput" type="text" placeholder="Gebruikersnaam">
+            <input id="passInput" type="password" placeholder="Wachtwoord">
             <button onclick="login()">Inloggen</button>
 
-            <p id="loginError">Onjuiste gebruikersnaam of wachtwoord</p>
-            <p id="lockoutMessage">Te veel pogingen. Wacht <span id="lockoutTimer"></span> seconden.</p>
+            <p id="loginError">Onjuiste gegevens</p>
+            <p id="lockoutMessage">Te veel pogingen. Wacht <span id="lockoutTimer"></span>s</p>
         </div>
     </div>
 
-    <!-- MAIN SITE -->
+    <!-- -------------------- MAIN SITE -------------------- -->
     <div id="mainSite">
 
         <header>Cijfers</header>
@@ -277,7 +269,7 @@
             </table>
         </div>
 
-        <!-- STATISTIEKEN -->
+        <!-- GRAFIEK -->
         <div id="statistieken" class="tab">
             <h2>Grafiek: Gemiddelde per vak</h2>
             <div class="chart-container">
@@ -295,32 +287,46 @@
 
     <script>
 
-        /* ---------------- LOGIN SYSTEM ---------------- */
+        /* ---------------------- PASSWORD SECURITY ---------------------- */
+
+        // SHA-256 hash for password "Joshasmc1234!"
+        // (Generated securely)
+        const correctHash =
+            "b6b01ee861057bdeb21cd7e279f98e3f7f872e95cba6ae61b5f78828e0635f32";
+
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+        }
+
+        /* ---------------------- LOGIN LOGIC ---------------------- */
         let attempts = 0;
-        let lockedOut = false;
-        const MAX_ATTEMPTS = 3;
-        const LOCKOUT_TIME = 30; // seconds
+        let locked = false;
 
-        function login() {
-            if (lockedOut) return;
+        async function login() {
+            if (locked) return;
 
-            const user = document.getElementById("userInput").value;
+            const user = document.getElementById("userInput").value.trim();
             const pass = document.getElementById("passInput").value;
 
-            if (user === "josha" && pass === "Joshasmc1234!") {
+            const passHash = await sha256(pass);
+
+            if (user === "josha" && passHash === correctHash) {
                 document.getElementById("loginPage").style.display = "none";
-                document.getElementById("mainSite").style.display = "block";
+                document.getElementById("mainSite").style.display = "flex";
             } else {
                 attempts++;
                 document.getElementById("loginError").style.display = "block";
 
-                if (attempts >= MAX_ATTEMPTS) lockout();
+                if (attempts >= 3) activateLockout();
             }
         }
 
-        function lockout() {
-            lockedOut = true;
-            let timer = LOCKOUT_TIME;
+        function activateLockout() {
+            locked = true;
+            let timer = 30;
             document.getElementById("lockoutMessage").style.display = "block";
 
             const interval = setInterval(() => {
@@ -329,15 +335,14 @@
 
                 if (timer <= 0) {
                     clearInterval(interval);
-                    lockedOut = false;
+                    locked = false;
                     attempts = 0;
                     document.getElementById("lockoutMessage").style.display = "none";
-                    document.getElementById("loginError").style.display = "none";
                 }
             }, 1000);
         }
 
-        /* ---------------- TAB SYSTEM ---------------- */
+        /* ---------------------- TABS ---------------------- */
         function openTab(name) {
             document.querySelectorAll(".tab").forEach(t => t.style.display = "none");
             document.querySelectorAll(".tablink").forEach(b => b.classList.remove("active"));
@@ -345,7 +350,7 @@
             document.querySelector(`button[onclick="openTab('${name}')"]`).classList.add("active");
         }
 
-        /* ---------------- DATA ---------------- */
+        /* ---------------------- DATA ---------------------- */
         const cijfers = {
             "Duitse taal": [
                 { datum: "7 nov", cijfer: 10.0 },
@@ -353,41 +358,58 @@
                 { datum: "29 sep", cijfer: 8.3 }
             ],
             "Muziek": [{ datum: "4 nov", cijfer: 7.8 }],
-            "Franse taal": [{ datum: "30 okt", cijfer: 7.3 }, { datum: "21 okt", cijfer: 7.4 }],
+            "Franse taal": [
+                { datum: "30 okt", cijfer: 7.3 },
+                { datum: "21 okt", cijfer: 7.4 }
+            ],
             "Engelse taal": [{ datum: "22 okt", cijfer: 7.0 }],
-            "Economie": [{ datum: "21 okt", cijfer: 5.7 }, { datum: "20 okt", cijfer: 5.0 }],
+            "Economie": [
+                { datum: "21 okt", cijfer: 5.7 },
+                { datum: "20 okt", cijfer: 5.0 }
+            ],
             "Nederlandse taal": [
                 { datum: "9 nov", cijfer: 9.3 },
                 { datum: "21 okt", cijfer: 6.6 },
                 { datum: "29 sep", cijfer: 7.5 }
             ],
             "Biologie": [{ datum: "19 okt", cijfer: 6.8 }],
-            "Aardrijkskunde": [{ datum: "14 okt", cijfer: 6.5 }, { datum: "30 sep", cijfer: 6.0 }],
+            "Aardrijkskunde": [
+                { datum: "14 okt", cijfer: 6.5 },
+                { datum: "30 sep", cijfer: 6.0 }
+            ],
             "Wiskunde": [{ datum: "8 okt", cijfer: 5.9 }],
             "Geschiedenis": [{ datum: "7 okt", cijfer: 6.9 }],
-            "Nask": [{ datum: "9 okt", cijfer: 6.5 }, { datum: "9 okt", cijfer: 6.8 }]
+            "Nask": [
+                { datum: "9 okt", cijfer: 6.5 },
+                { datum: "9 okt", cijfer: 6.8 }
+            ]
         };
 
         const averages = {
-            "Duitse taal": 6.7, "Muziek": 7.8, "Franse taal": 7.3, "Engelse taal": 7.0,
-            "Economie": 5.5, "Nederlandse taal": 7.5, "Biologie": 6.8,
-            "Aardrijkskunde": 6.3, "Wiskunde": 5.9, "Geschiedenis": 6.9, "Nask": 6.6
+            "Duitse taal": 6.7, "Muziek": 7.8, "Franse taal": 7.3,
+            "Engelse taal": 7.0, "Economie": 5.5,
+            "Nederlandse taal": 7.5, "Biologie": 6.8,
+            "Aardrijkskunde": 6.3, "Wiskunde": 5.9,
+            "Geschiedenis": 6.9, "Nask": 6.6
         };
 
-        const maand = { jan: 0, feb: 1, mrt: 2, apr: 3, mei: 4, jun: 5, jul: 6, aug: 7, sep: 8, okt: 9, nov: 10, dec: 11 };
+        const maand = {
+            jan: 0, feb: 1, mrt: 2, apr: 3, mei: 4, jun: 5,
+            jul: 6, aug: 7, sep: 8, okt: 9, nov: 10, dec: 11
+        };
 
         function parseDate(str) {
             const [d, m] = str.split(" ");
             return new Date(2025, maand[m.slice(0, 3)], parseInt(d));
         }
 
-        function getColor(s) {
-            if (s < 5.5) return "rood";
-            if (s < 6.5) return "geel";
+        function getColor(v) {
+            if (v < 5.5) return "rood";
+            if (v < 6.5) return "geel";
             return "groen";
         }
 
-        /* ---------------- TABLE GENERATION ---------------- */
+        /* ---------------------- TABLES ---------------------- */
         function generateGradeTable() {
             const tbody = document.querySelector("#gradeTable tbody");
             tbody.innerHTML = "";
@@ -395,7 +417,7 @@
             const all = [];
 
             for (const vak in cijfers) {
-                cijfers[vak].forEach(e => all.push({ vak, ...e }));
+                cijfers[vak].forEach(item => all.push({ vak, ...item }));
             }
 
             all.sort((a, b) => parseDate(b.datum) - parseDate(a.datum));
@@ -415,39 +437,83 @@
             tbody.innerHTML = "";
 
             for (const vak in averages) {
+                const v = averages[vak];
                 tbody.innerHTML += `
                 <tr>
                     <td>${vak}</td>
-                    <td><span class="score ${getColor(averages[vak])}">${averages[vak].toFixed(1)}</span></td>
+                    <td><span class="score ${getColor(v)}">${v.toFixed(1)}</span></td>
                 </tr>`;
             }
         }
 
-        /* ---------------- CHART ---------------- */
+        /* ---------------------- SORTING ---------------------- */
+        function makeSortable(tableId) {
+            const table = document.getElementById(tableId);
+            const headers = table.querySelectorAll("th");
+
+            headers.forEach((th, index) => {
+                th.addEventListener("click", () => {
+                    const rows = Array.from(table.querySelector("tbody").rows);
+
+                    let sorted;
+
+                    if (index === 0) {
+                        sorted = rows.sort((a, b) =>
+                            a.cells[0].innerText.localeCompare(b.cells[0].innerText)
+                        );
+                    } else if (index === 1) {
+                        sorted = rows.sort((a, b) =>
+                            parseDate(b.cells[1].innerText) -
+                            parseDate(a.cells[1].innerText)
+                        );
+                    } else {
+                        sorted = rows.sort((a, b) =>
+                            parseFloat(b.cells[2].innerText) -
+                            parseFloat(a.cells[2].innerText)
+                        );
+                    }
+
+                    table.querySelector("tbody").innerHTML = "";
+                    sorted.forEach(r => table.querySelector("tbody").appendChild(r));
+                });
+            });
+        }
+
+        /* ---------------------- CHART ---------------------- */
         function createChart() {
+            const labels = Object.keys(averages);
+            const data = labels.map(l => averages[l]);
+
             new Chart(document.getElementById("avgChart"), {
                 type: "bar",
                 data: {
-                    labels: Object.keys(averages),
+                    labels,
                     datasets: [{
-                        data: Object.values(averages),
-                        backgroundColor: Object.values(averages).map(v =>
+                        label: "Gemiddelde",
+                        data,
+                        backgroundColor: data.map(v =>
                             v < 5.5 ? "#d9534f" :
                                 v < 6 ? "#f0ad4e" :
                                     "#5cb85c"
-                        )
+                        ),
+                        borderRadius: 6
                     }]
                 },
                 options: {
                     indexAxis: 'y',
-                    scales: { x: { beginAtZero: true, max: 10 } }
+                    animation: false,
+                    scales: {
+                        x: { beginAtZero: true, max: 10 }
+                    }
                 }
             });
         }
 
-        /* ---------------- INIT ---------------- */
+        /* ---------------------- INIT ---------------------- */
         generateGradeTable();
         generateAverageTable();
+        makeSortable("gradeTable");
+        makeSortable("averageTable");
         createChart();
 
     </script>
