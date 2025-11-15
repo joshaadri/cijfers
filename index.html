@@ -41,6 +41,7 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -134,9 +135,19 @@
         }
 
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-10px);
+            }
+
+            75% {
+                transform: translateX(10px);
+            }
         }
 
         .error-message.show {
@@ -171,8 +182,13 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         nav {
@@ -202,25 +218,6 @@
             transform: translateY(-2px);
         }
 
-        .logout-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #d9534f;
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: 0.3s;
-        }
-
-        .logout-btn:hover {
-            background-color: #c9302c;
-            transform: translateY(-2px);
-        }
-
         .tab {
             display: none;
             animation: fadeIn 0.4s ease;
@@ -247,7 +244,8 @@
             overflow: hidden;
         }
 
-        th, td {
+        th,
+        td {
             padding: 14px 12px;
             font-size: 1.05em;
             border-bottom: 1px solid #333;
@@ -274,9 +272,18 @@
             display: inline-block;
         }
 
-        .rood { background-color: #d9534f; }
-        .geel { background-color: #f0ad4e; color: #000; }
-        .groen { background-color: #5cb85c; }
+        .rood {
+            background-color: #d9534f;
+        }
+
+        .geel {
+            background-color: #f0ad4e;
+            color: #000;
+        }
+
+        .groen {
+            background-color: #5cb85c;
+        }
 
         .chart-container {
             width: 100%;
@@ -327,8 +334,7 @@
 
     <!-- MAIN APPLICATION -->
     <div class="main-app" id="mainApp">
-        <button class="logout-btn" onclick="logout()">Uitloggen</button>
-        
+
         <header>Cijfers</header>
 
         <nav>
@@ -388,9 +394,9 @@
         const VALID_PASS = "Joshasmc1234!";
 
         // LOGIN LOGIC
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
             e.preventDefault();
-            
+
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const errorMsg = document.getElementById('errorMessage');
@@ -398,7 +404,7 @@
             if (username === VALID_USER && password === VALID_PASS) {
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('mainApp').classList.add('show');
-                
+
                 // Initialize the app
                 generateGradeTable();
                 generateAverageTable();
@@ -412,13 +418,6 @@
                 }, 3000);
             }
         });
-
-        function logout() {
-            document.getElementById('mainApp').classList.remove('show');
-            document.getElementById('loginScreen').style.display = 'flex';
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-        }
 
         // GRADES DATA
         const cijfers = {
@@ -607,4 +606,5 @@
     </script>
 
 </body>
+
 </html>
